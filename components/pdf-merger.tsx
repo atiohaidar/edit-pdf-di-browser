@@ -148,9 +148,18 @@ export function PDFMerger() {
         <button
           onClick={handleProcess}
           disabled={isProcessing || uploadedFiles.length < minFilesRequired}
-          className="w-full px-6 py-3 rounded-md font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3.5 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] group"
         >
-          {processButtonText}
+          <span className="flex items-center justify-center gap-2">
+            {isProcessing ? (
+              <>
+                <span className="h-4 w-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                {processButtonText}
+              </>
+            ) : (
+              processButtonText
+            )}
+          </span>
         </button>
       )}
 
@@ -168,7 +177,7 @@ export function PDFMerger() {
       {resultPDF && (
         <button
           onClick={handleReset}
-          className="w-full px-4 py-2 rounded-md font-medium bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors"
+          className="w-full px-5 py-3 rounded-xl font-medium bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] shadow-sm"
         >
           {resetButtonText}
         </button>

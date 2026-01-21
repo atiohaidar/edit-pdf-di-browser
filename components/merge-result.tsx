@@ -1,6 +1,6 @@
 'use client'
 
-import { Download, Check } from 'lucide-react'
+import { Download, CheckCircle2, FileCheck } from 'lucide-react'
 
 interface MergeResultProps {
   isVisible: boolean
@@ -33,25 +33,37 @@ export function MergeResult({
   const downloadLabel = mode === 'merge' ? 'Download PDF' : 'Download PDF Terkompres'
 
   return (
-    <div className="space-y-3 p-4 rounded-lg bg-accent/10 border border-accent/20">
-      <div className="flex items-center gap-2">
-        <Check className="h-5 w-5 text-accent" />
-        <p className="text-sm font-medium text-foreground">{successMessage}</p>
+    <div className="space-y-4 p-5 rounded-xl bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 animate-fade-in">
+      <div className="flex items-center gap-3">
+        <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center">
+          <CheckCircle2 className="h-5 w-5 text-accent" />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-foreground">{successMessage}</p>
+          <p className="text-xs text-muted-foreground">Siap untuk diunduh</p>
+        </div>
       </div>
 
-      <div className="space-y-2 p-3 rounded-md bg-card border border-accent/10">
-        <p className="text-xs text-muted-foreground">Nama file:</p>
-        <p className="text-sm font-medium text-foreground break-all">{fileName}</p>
-        <p className="text-xs text-muted-foreground pt-2">Ukuran:</p>
-        <p className="text-sm font-medium text-foreground">{formatFileSize(fileSize)}</p>
+      <div className="space-y-3 p-4 rounded-lg bg-card/50 border border-accent/10">
+        <div className="flex items-start gap-3">
+          <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+            <FileCheck className="h-5 w-5 text-accent" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground mb-1">Nama file:</p>
+            <p className="text-sm font-medium text-foreground break-all">{fileName}</p>
+            <p className="text-xs text-muted-foreground mt-2">Ukuran:</p>
+            <p className="text-sm font-semibold text-accent">{formatFileSize(fileSize)}</p>
+          </div>
+        </div>
       </div>
 
       <button
         onClick={onDownload}
         disabled={isDownloading}
-        className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-md font-medium bg-accent text-accent-foreground hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-semibold bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] group"
       >
-        <Download className="h-4 w-4" />
+        <Download className="h-5 w-5 group-hover:animate-bounce" />
         {isDownloading ? 'Mengunduh...' : downloadLabel}
       </button>
     </div>
