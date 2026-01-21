@@ -96,18 +96,28 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'relative rounded-lg border-2 border-dashed p-8 transition-all',
-          'flex flex-col items-center justify-center gap-3',
+          'relative rounded-xl border-2 border-dashed p-10 transition-all duration-300',
+          'flex flex-col items-center justify-center gap-4',
+          'group cursor-pointer',
           isDragging
-            ? 'border-primary bg-primary/5'
-            : 'border-border bg-card hover:border-primary/50',
+            ? 'border-primary bg-primary/10 scale-[1.02] shadow-lg shadow-primary/20'
+            : 'border-border bg-card/50 hover:border-primary/50 hover:bg-card',
           disabled && 'opacity-50 cursor-not-allowed'
         )}
       >
-        <Upload className="h-10 w-10 text-primary" />
-        <div className="text-center">
-          <p className="font-semibold text-foreground">Drag & Drop File PDF di sini</p>
+        <div className={cn(
+          "h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300",
+          isDragging ? 'scale-110 bg-primary/20' : 'group-hover:scale-105 group-hover:bg-primary/15'
+        )}>
+          <Upload className={cn(
+            "h-8 w-8 text-primary transition-transform duration-300",
+            isDragging && 'scale-110'
+          )} />
+        </div>
+        <div className="text-center space-y-2">
+          <p className="font-semibold text-foreground text-lg">Drag & Drop File PDF di sini</p>
           <p className="text-sm text-muted-foreground">atau klik tombol di bawah untuk memilih file</p>
+          <p className="text-xs text-muted-foreground/70">Maksimal 50MB per file</p>
         </div>
 
         <label>
@@ -126,10 +136,11 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
             }}
             disabled={disabled}
             className={cn(
-              'mt-3 px-4 py-2 rounded-md font-medium',
+              'mt-2 px-6 py-2.5 rounded-lg font-medium shadow-sm',
               'bg-primary text-primary-foreground hover:bg-primary/90',
-              'transition-colors cursor-pointer',
-              disabled && 'opacity-50 cursor-not-allowed'
+              'transition-all duration-200 hover:shadow-md hover:scale-105',
+              'active:scale-95',
+              disabled && 'opacity-50 cursor-not-allowed hover:scale-100'
             )}
           >
             Pilih File PDF
@@ -138,8 +149,9 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
       </div>
 
       {error && (
-        <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">
-          {error}
+        <div className="p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2 animate-fade-in">
+          <span className="text-base">⚠️</span>
+          <span>{error}</span>
         </div>
       )}
     </div>
