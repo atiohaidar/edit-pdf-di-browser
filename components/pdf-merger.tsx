@@ -7,8 +7,9 @@ import { FileList } from './file-list'
 import { MergeProgress } from './merge-progress'
 import { MergeResult } from './merge-result'
 import { ModeSelector } from './mode-selector'
+import { FileReorder } from './file-reorder'
+import { SizeAdjuster } from './size-adjuster'
 import { mergePDFs, compressPDFs } from './pdf-utils'
-import { PDFDocument as PdfDoc } from 'pdf-lib'
 
 interface PDFFile {
   file: File
@@ -30,6 +31,7 @@ export function PDFMerger() {
     fileName: string
   } | null>(null)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [showSizeAdjuster, setShowSizeAdjuster] = useState(false)
   const resultPDFRef = useRef<Blob | null>(null)
 
   const handleFilesAdded = (newFiles: PDFFile[]) => {
@@ -120,7 +122,24 @@ export function PDFMerger() {
     setUploadedFiles([])
     setResultPDF(null)
     setProcessProgress(0)
+    setShowSizeAdjuster(false)
     resultPDFRef.current = null
+  }
+
+  const handleReorder = (newFiles: PDFFile[]) => {
+    setUploadedFiles(newFiles)
+  }
+
+  const handleSizeAdjusted = (adjustedBlob: Blob, newSize: number) => {
+    if (resultPDFRef.current) {
+      resultPDFRef.current = adjustedBlob
+      if (resultPDF) {
+        setResultPDF({
+          ...resultPDF,
+          blob: adjustedBlob,
+        })
+      }
+    }
   }
 
   const isDisabled = isProcessing || resultPDF !== null
@@ -142,19 +161,33 @@ export function PDFMerger() {
 
       <PDFUploadArea onFilesAdded={handleFilesAdded} disabled={isDisabled} />
 
-      <FileList files={uploadedFiles} onRemove={handleRemoveFile} disabled={isDisabled} />
+      {uploadedFiles.length > 0 && !resultPDF && mode === 'merge' && (
+        <FileReorder files={uploadedFiles} onReorder={handleReorder} onRemove={handleRemoveFile} />
+      )}
+
+      {uploadedFiles.length > 0 && !resultPDF && mode === 'compress' && (
+        <FileList files={uploadedFiles} onRemove={handleRemoveFile} disabled={isDisabled} />
+      )}
 
       {uploadedFiles.length > 0 && !resultPDF && (
         <button
           onClick={handleProcess}
           disabled={isProcessing || uploadedFiles.length < minFilesRequired}
-          className="w-full px-6 py-3 rounded-md font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-2 rounded-sm font-bold handwritten text-base bg-primary text-primary-foreground hover:bg-primary/90 transition-colors border-2 border-primary notebook-card disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {processButtonText}
         </button>
       )}
 
       <MergeProgress isVisible={isProcessing} progress={processProgress} />
+
+      {resultPDF && mode === 'compress' && showSizeAdjuster && (
+        <SizeAdjuster
+          fileSize={resultPDFRef.current?.size || 0}
+          fileName={resultPDF.fileName}
+          onAdjust={handleSizeAdjusted}
+        />
+      )}
 
       <MergeResult
         isVisible={resultPDF !== null}
@@ -165,10 +198,19 @@ export function PDFMerger() {
         mode={mode}
       />
 
+      {resultPDF && !showSizeAdjuster && mode === 'compress' && (
+        <button
+          onClick={() => setShowSizeAdjuster(true)}
+          className="w-full px-4 py-2 rounded-sm font-bold handwritten text-sm bg-accent text-accent-foreground hover:bg-accent/90 transition-colors border-2 border-accent notebook-card"
+        >
+          Atur Ukuran File (1-5 MB)
+        </button>
+      )}
+
       {resultPDF && (
         <button
           onClick={handleReset}
-          className="w-full px-4 py-2 rounded-md font-medium bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors"
+          className="w-full px-4 py-2 rounded-sm font-bold handwritten text-sm bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors border-2 border-secondary notebook-card"
         >
           {resetButtonText}
         </button>

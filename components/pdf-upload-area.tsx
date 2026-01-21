@@ -90,24 +90,24 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          'relative rounded-lg border-2 border-dashed p-8 transition-all',
+          'relative rounded-sm border-2 border-dashed p-8 transition-all notebook-card',
           'flex flex-col items-center justify-center gap-3',
           isDragging
             ? 'border-primary bg-primary/5'
-            : 'border-border bg-card hover:border-primary/50',
+            : 'border-primary bg-card',
           disabled && 'opacity-50 cursor-not-allowed'
         )}
       >
         <Upload className="h-10 w-10 text-primary" />
         <div className="text-center">
-          <p className="font-semibold text-foreground">Drag & Drop File PDF di sini</p>
-          <p className="text-sm text-muted-foreground">atau klik tombol di bawah untuk memilih file</p>
+          <p className="font-bold handwritten text-base text-primary">Drag & Drop File PDF</p>
+          <p className="text-xs text-muted-foreground">atau klik tombol untuk memilih file</p>
         </div>
 
         <label>
@@ -126,8 +126,8 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
             }}
             disabled={disabled}
             className={cn(
-              'mt-3 px-4 py-2 rounded-md font-medium',
-              'bg-primary text-primary-foreground hover:bg-primary/90',
+              'mt-3 px-4 py-2 rounded-sm font-bold handwritten text-sm',
+              'border-2 border-primary bg-primary text-primary-foreground hover:bg-primary/90',
               'transition-colors cursor-pointer',
               disabled && 'opacity-50 cursor-not-allowed'
             )}
@@ -138,7 +138,7 @@ export function PDFUploadArea({ onFilesAdded, disabled }: PDFUploadAreaProps) {
       </div>
 
       {error && (
-        <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">
+        <div className="p-3 rounded-sm bg-destructive/10 border-2 border-destructive text-destructive text-xs font-medium">
           {error}
         </div>
       )}
